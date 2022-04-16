@@ -11,5 +11,5 @@ public interface RecipeRepository extends CrudRepository<Recipe, Long> {
 
     Iterable<Recipe> findAllByOrderByViewsAsc();
 
-    Iterable<Recipe> findAllByAuthor(String author);
+    Iterable<Recipe> findAllByAuthorIgnoreCase(String author);
 }

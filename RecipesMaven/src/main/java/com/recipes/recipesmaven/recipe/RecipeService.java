@@ -56,8 +56,9 @@ public class RecipeService {
         return recipeRepository.findAllByOrderByViewsAsc();
     }
 
-    public Iterable<Recipe> getAllRecipesByAuthor(String login) {
-        return recipeRepository.findAllByAuthor(login);
+    public Iterable<Recipe> getAllRecipesByAuthor(String sesID) {
+        String login = sessionService.validateUser(sesID);
+        return recipeRepository.findAllByAuthorIgnoreCase(login);
     }
 
     public Iterable<Recipe> getAllRecipesByCategory(String category) {

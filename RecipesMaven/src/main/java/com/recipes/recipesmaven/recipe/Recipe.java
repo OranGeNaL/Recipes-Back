@@ -38,15 +38,14 @@ public class Recipe {
     @Column(nullable = false)
     private String description;
 
-    @NotBlank
-    @Column(nullable = false)
+    @Column(length = 64)
     private String pathToTheMainPicture;
 
-    @NotBlank
+    @NotNull
     @Column(nullable = false)
     private int cookingDuration;
 
-    @NotBlank
+    @NotNull
     @Column(nullable = false)
     private int portionNumber;
 
