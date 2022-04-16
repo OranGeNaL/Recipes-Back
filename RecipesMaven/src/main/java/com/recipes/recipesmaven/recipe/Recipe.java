@@ -39,7 +39,7 @@ public class Recipe {
     private String description;
 
     @Column(length = 64)
-    private String pathToTheMainPicture;
+    private String mainPicture;
 
     @NotNull
     @Column(nullable = false)
@@ -65,7 +65,7 @@ public class Recipe {
     @Size(min = 1)
     @ElementCollection
     @Column(nullable = false)
-    private List<String> pathToTheStepsPictures;
+    private List<String> stepsPicture;
 
     @NotBlank
     @Column(nullable = false)
@@ -74,4 +74,11 @@ public class Recipe {
     @NotNull
     @Column(nullable = false)
     private int views;
+
+    @Transient
+    public String getMainPhotosImagePath() {
+        if (mainPicture == null || id == null) return null;
+
+        return "/recipe-photos/" + id + "/" + mainPicture;
+    }
 }
