@@ -64,5 +64,6 @@ jobs:
               cd ${{ secrets.APP_PATH }}
               docker-compose down
               docker image rm orangenal/recipes-maven
+              docker system prune --volumes -a --force
               docker pull orangenal/recipes-maven:latest
               docker-compose up -d
