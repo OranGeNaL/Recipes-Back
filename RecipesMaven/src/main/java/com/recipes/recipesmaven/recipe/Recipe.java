@@ -79,6 +79,6 @@ public class Recipe {
     public String getMainPhotosImagePath() {
         if (mainPicture == null || id == null) return null;
 
-        return "/recipe-photos/" + id + "/" + mainPicture;
+        return "/recipe-photos/main/" + id + "/" + mainPicture;
     }
 }

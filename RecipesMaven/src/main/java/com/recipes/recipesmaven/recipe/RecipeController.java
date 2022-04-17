@@ -31,7 +31,7 @@ public class RecipeController {
         String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
         recipe.setMainPicture(fileName);
         Map<String, Long> id = Map.of("id", recipeService.saveRecipe(recipe));
-        String uploadDir = "recipe-photos/" + id.get("id");
+        String uploadDir = "recipe-photos/main/" + id.get("id");
         FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
         return id;
     }

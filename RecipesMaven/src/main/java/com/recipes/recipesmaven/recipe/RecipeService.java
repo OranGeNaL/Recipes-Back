@@ -26,7 +26,7 @@ public class RecipeService {
 
     public List<String> getRecipeByIdMainInformation(Long id) {
         Recipe recipe = recipeRepository.findById(id).orElseThrow(RecipeNotFoundException::new);
-        return List.of(recipe.getName(), recipe.getPathToTheMainPicture());
+        return List.of(recipe.getName(), recipe.getMainPicture());
     }
 
     public void deleteRecipeById(Long id) {
