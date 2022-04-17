@@ -1,13 +1,10 @@
 package com.recipes.recipesmaven.recipe;
 
-import com.recipes.recipesmaven.FileUploadUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.IOException;
@@ -27,12 +24,12 @@ public class RecipeController {
     }
 
     @PostMapping("/new")
-    public Map<String, Long> postRecipe(@Valid @RequestBody Recipe recipe, @RequestParam("mainPicture") MultipartFile multipartFile) throws IOException {
-        String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
-        recipe.setMainPicture(fileName);
+    public Map<String, Long> postRecipe(@Valid @RequestBody Recipe recipe) throws IOException {
+        //String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
+        //recipe.setMainPicture(fileName);
         Map<String, Long> id = Map.of("id", recipeService.saveRecipe(recipe));
         String uploadDir = "recipe-photos/main/" + id.get("id");
-        FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
+        //FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
         return id;
     }
 
@@ -69,7 +66,7 @@ public class RecipeController {
     }
 
     @GetMapping("/fragment/{id}")
-    public Map<String,String> getMainInformation(@PathVariable Long id) {
+    public Map<String, String> getMainInformation(@PathVariable Long id) {
         List<String> list = recipeService.getRecipeByIdMainInformation(id);
         return Map.of("title", list.get(0),
                 "main-photo", list.get(1));

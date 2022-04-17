@@ -1,18 +1,13 @@
 package com.recipes.recipesmaven.favorites;
 
-import com.recipes.recipesmaven.FileUploadUtil;
 import com.recipes.recipesmaven.recipe.Recipe;
-import com.recipes.recipesmaven.recipe.RecipeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
-import java.io.IOException;
-import java.util.Map;
+import java.util.Iterator;
 
 @RestController
 @RequestMapping("/api/favorites")
@@ -23,11 +18,11 @@ public class FavoritesController {
     private final FavoritesService favoritesService;
 
     @PostMapping
-    public Map<String, Long> postRecipe(String sesID, Long idRecipe) {
-        return Map.of("id", favoritesService.saveFavorite(sesID, idRecipe));
+    public void postFavorite(@RequestBody @Valid Favorite favorite) {
+        favoritesService.saveFavorite(favorite);
     }
     @GetMapping
-    public ResponseEntity<Iterable<Favorite>> getAllRecipesByAuthor(@RequestParam(name = "sesID") String sesID) {
+    public ResponseEntity<Iterator<Recipe>> getAllRecipesByAuthor(@RequestParam(name = "sesID") String sesID) {
         return ResponseEntity.ok(favoritesService.getAllByAuthor(sesID));
     }
 }

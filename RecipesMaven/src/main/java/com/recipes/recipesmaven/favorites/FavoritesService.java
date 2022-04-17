@@ -1,21 +1,32 @@
 package com.recipes.recipesmaven.favorites;
 
+import com.recipes.recipesmaven.recipe.Recipe;
+import com.recipes.recipesmaven.recipe.RecipeNotFoundException;
+import com.recipes.recipesmaven.recipe.RecipeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class FavoritesService {
-    FavoritesRepository favoritesRepository;
 
-    public Long saveFavorite(String sesID, Long idRecipe) {
-        Favorite favorite = new Favorite();
-        favorite.setIdRecipe(idRecipe);
-        favorite.setSesAuthor(sesID);
-        return favoritesRepository.save(favorite).getId();
+    private final FavoritesRepository favoritesRepository;
+    private final RecipeRepository recipeRepository;
+
+    public void saveFavorite(Favorite favorite) {
+        favoritesRepository.save(favorite);
     }
 
-    public Iterable<Favorite> getAllByAuthor(String sesID) {
-        return favoritesRepository.findAllBySesAuthorIgnoreCaseOrderById(sesID);
+    public Iterator<Recipe> getAllByAuthor(String sesID) {
+        Iterable<Favorite> favorites = favoritesRepository.findAllBySesAuthorIgnoreCaseOrderById(sesID);
+        List<Recipe> recipes = new ArrayList<>();
+        for (Favorite favorite : favorites) {
+            recipes.add(recipeRepository.findById(favorite.getIdRecipe()).orElseThrow(RecipeNotFoundException::new));
+        }
+        return recipes.iterator();
     }
 }
