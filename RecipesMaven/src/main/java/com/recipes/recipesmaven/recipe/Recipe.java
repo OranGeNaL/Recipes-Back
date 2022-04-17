@@ -17,7 +17,6 @@ import java.util.List;
 @Entity
 @NoArgsConstructor
 public class Recipe {
-    @JsonIgnore
     @Id
     @GeneratedValue
     private Long id;
