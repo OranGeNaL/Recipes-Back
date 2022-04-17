@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 public class LikeDislikeController {
     private final LikeDislikeService likeDislikeService;
 
-    @PostMapping("/likes")
+    @PostMapping("/like")
     public void likePost(@RequestParam Long idRecipe) {
         likeDislikeService.likePost(idRecipe);
     }
