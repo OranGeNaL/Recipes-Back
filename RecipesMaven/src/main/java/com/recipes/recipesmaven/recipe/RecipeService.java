@@ -1,5 +1,8 @@
 package com.recipes.recipesmaven.recipe;
 
+import com.recipes.recipesmaven.LikeDislike.LikeDislikeDTO;
+import com.recipes.recipesmaven.LikeDislike.LikeDislikeRepository;
+import com.recipes.recipesmaven.LikeDislike.LikeDislikeService;
 import com.recipes.recipesmaven.users.SessionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -11,6 +14,7 @@ import java.util.List;
 public class RecipeService {
     private final RecipeRepository recipeRepository;
     private final SessionService sessionService;
+    private final LikeDislikeRepository likeDislikeRepository;
 
     public Long saveRecipe(Recipe recipe) {
         recipe.setAuthor(sessionService.validateUser(recipe.getAuthor()));
@@ -20,6 +24,9 @@ public class RecipeService {
     public Recipe getRecipeById(Long id) {
         Recipe recipe = recipeRepository.findById(id).orElseThrow(RecipeNotFoundException::new);
         recipe.setViews(recipe.getViews() + 1);
+        LikeDislikeDTO likeDislikeDTO = likeDislikeRepository.findByIdRecipe(id).orElseThrow(RecipeNotFoundException::new);
+        recipe.setLikes(likeDislikeDTO.getLikes());
+        recipe.setDislikes(likeDislikeDTO.getDislikes());
         recipeRepository.save(recipe);
         return recipe;
     }
@@ -67,5 +74,9 @@ public class RecipeService {
 
     public Iterable<Recipe> getAllRecipesContainingName(String name) {
         return recipeRepository.findAllByNameContainsIgnoreCaseOrderByDateDesc(name);
+    }
+
+    public Iterable<Recipe> getAllRecipesByLikes() {
+        return recipeRepository.findAllByOrderByLikesAsc();
     }
 }

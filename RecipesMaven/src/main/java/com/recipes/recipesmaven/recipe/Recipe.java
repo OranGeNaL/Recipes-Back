@@ -75,6 +75,13 @@ public class Recipe {
     @Column(nullable = false)
     private int views;
 
+    @NotNull
+    @Column(nullable = false)
+    private long likes;
+
+    @NotNull
+    @Column(nullable = false)
+    private long dislikes;
     @Transient
     public String getMainPhotosImagePath() {
         if (mainPicture == null || id == null) return null;

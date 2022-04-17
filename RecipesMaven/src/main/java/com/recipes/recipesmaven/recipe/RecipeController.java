@@ -1,5 +1,6 @@
 package com.recipes.recipesmaven.recipe;
 
+import com.recipes.recipesmaven.LikeDislike.LikeDislikeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ import java.util.Map;
 @Validated
 public class RecipeController {
     private final RecipeService recipeService;
+    private final LikeDislikeService likeDislikeService;
 
     @GetMapping("/{id}")
     public Recipe getRecipe(@PathVariable Long id) {
@@ -28,6 +30,7 @@ public class RecipeController {
         //String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
         //recipe.setMainPicture(fileName);
         Map<String, Long> id = Map.of("id", recipeService.saveRecipe(recipe));
+        likeDislikeService.save(id.get("id"));
         String uploadDir = "recipe-photos/main/" + id.get("id");
         //FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
         return id;
@@ -63,6 +66,11 @@ public class RecipeController {
     @GetMapping("/orderBy/views")
     public ResponseEntity<Iterable<Recipe>> getAllRecipesOrderByViews() {
         return ResponseEntity.ok(recipeService.getAllRecipesOrderByViews());
+    }
+
+    @GetMapping("/orderBy/likes")
+    public ResponseEntity<Iterable<Recipe>> getAllRecipesOrderByLikes() {
+        return ResponseEntity.ok(recipeService.getAllRecipesByLikes());
     }
 
     @GetMapping("/fragment/{id}")
