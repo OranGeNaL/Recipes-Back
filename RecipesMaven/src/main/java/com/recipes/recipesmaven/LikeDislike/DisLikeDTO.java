@@ -1,30 +1,32 @@
-package com.recipes.recipesmaven.favorites;
+package com.recipes.recipesmaven.LikeDislike;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.List;
 
 @Data
 @Entity
 @NoArgsConstructor
-public class Favorite {
-
+public class DisLikeDTO {
     @Id
     @JsonIgnore
     @GeneratedValue
-    private Long id;
+    Long id;
 
-    @NotNull
     @ElementCollection
     @Column
-    private List<Long> recipes;
+    List<String> email;
 
-    @NotBlank
+    @NotNull
     @Column(nullable = false)
-    private String email;
+    Long idRecipe;
+
+    @NotNull
+    @Column(nullable = false)
+    Long dislikes;
 }

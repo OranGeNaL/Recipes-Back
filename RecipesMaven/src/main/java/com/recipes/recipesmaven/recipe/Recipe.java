@@ -17,7 +17,6 @@ import java.util.List;
 @Entity
 @NoArgsConstructor
 public class Recipe {
-    @JsonIgnore
     @Id
     @GeneratedValue
     private Long id;
@@ -82,6 +81,12 @@ public class Recipe {
     @NotNull
     @Column(nullable = false)
     private long dislikes;
+
+    @Column
+    private boolean isLike;
+
+    @Column
+    private boolean isDislike;
     @Transient
     public String getMainPhotosImagePath() {
         if (mainPicture == null || id == null) return null;

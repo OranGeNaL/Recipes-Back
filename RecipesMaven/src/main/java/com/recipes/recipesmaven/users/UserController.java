@@ -32,7 +32,12 @@ public class UserController {
 
     @GetMapping("/login")
     public ResponseEntity<Map<String,String>> login(@RequestParam(name = "email") String email, @RequestParam(name = "password") String password) {
-        return ResponseEntity.ok(Map.of("sesID", userService.login(email,password)));
+        String sesID = userService.login(email,password);
+        if (sesID == null) {
+            return ResponseEntity.badRequest().build();
+        } else {
+            return ResponseEntity.ok(Map.of("sesID",sesID));
+        }
     }
 
     @ExceptionHandler(DuplicateUsernameException.class)

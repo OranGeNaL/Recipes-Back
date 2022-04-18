@@ -12,12 +12,12 @@ public class LikeDislikeController {
     private final LikeDislikeService likeDislikeService;
 
     @PostMapping("/like")
-    public void likePost(@RequestParam Long idRecipe) {
-        likeDislikeService.likePost(idRecipe);
+    public void setLike(@RequestParam Long idRecipe, @RequestParam String sesID) {
+        likeDislikeService.likePost(idRecipe, sesID);
     }
 
     @PostMapping("/dislike")
-    public void dislikePost(@RequestParam Long idRecipe) {
-        likeDislikeService.dislikePost(idRecipe);
+    public void setDislike(@RequestParam Long idRecipe, @RequestParam String sesID) {
+        likeDislikeService.dislikePost(idRecipe, sesID);
     }
 }

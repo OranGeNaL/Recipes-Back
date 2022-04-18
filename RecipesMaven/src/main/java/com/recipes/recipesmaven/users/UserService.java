@@ -28,6 +28,6 @@ public class UserService {
         if (user.getPassword().equals(password)) {
             return sessionService.saveSession(email);
         }
-        throw new RecipeNotFoundException();
+        return null;
     }
 }

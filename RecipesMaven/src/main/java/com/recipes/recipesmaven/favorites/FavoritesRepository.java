@@ -5,5 +5,8 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface FavoritesRepository extends CrudRepository<Favorite, Long> {
-    Iterable<Favorite> findAllBySesAuthorIgnoreCaseOrderById(String sesAuthor);
+
+    boolean existsByEmail(String email);
+
+    Favorite findByEmail(String email);
 }

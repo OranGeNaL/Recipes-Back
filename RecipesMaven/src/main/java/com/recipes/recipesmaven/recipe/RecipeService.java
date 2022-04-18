@@ -1,7 +1,5 @@
 package com.recipes.recipesmaven.recipe;
 
-import com.recipes.recipesmaven.LikeDislike.LikeDislikeDTO;
-import com.recipes.recipesmaven.LikeDislike.LikeDislikeRepository;
 import com.recipes.recipesmaven.LikeDislike.LikeDislikeService;
 import com.recipes.recipesmaven.users.SessionService;
 import lombok.RequiredArgsConstructor;
@@ -14,19 +12,20 @@ import java.util.List;
 public class RecipeService {
     private final RecipeRepository recipeRepository;
     private final SessionService sessionService;
-    private final LikeDislikeRepository likeDislikeRepository;
+    private final LikeDislikeService likeDislikeService;
 
     public Long saveRecipe(Recipe recipe) {
         recipe.setAuthor(sessionService.validateUser(recipe.getAuthor()));
         return recipeRepository.save(recipe).getId();
     }
 
-    public Recipe getRecipeById(Long id) {
+    public Recipe getRecipeById(Long id, String sesID) {
         Recipe recipe = recipeRepository.findById(id).orElseThrow(RecipeNotFoundException::new);
         recipe.setViews(recipe.getViews() + 1);
-        LikeDislikeDTO likeDislikeDTO = likeDislikeRepository.findByIdRecipe(id).orElseThrow(RecipeNotFoundException::new);
-        recipe.setLikes(likeDislikeDTO.getLikes());
-        recipe.setDislikes(likeDislikeDTO.getDislikes());
+        recipe.setLikes(likeDislikeService.getRecipeLikes(id));
+        recipe.setDislikes(likeDislikeService.getRecipeDisLikes(id));
+        recipe.setLike(likeDislikeService.isLiked(id, sesID));
+        recipe.setDislike(likeDislikeService.isDisliked(id, sesID));
         recipeRepository.save(recipe);
         return recipe;
     }

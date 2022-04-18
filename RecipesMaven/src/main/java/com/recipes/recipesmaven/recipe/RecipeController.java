@@ -21,8 +21,8 @@ public class RecipeController {
     private final LikeDislikeService likeDislikeService;
 
     @GetMapping("/{id}")
-    public Recipe getRecipe(@PathVariable Long id) {
-        return recipeService.getRecipeById(id);
+    public Recipe getRecipe(@PathVariable Long id, @RequestParam String sesID) {
+        return recipeService.getRecipeById(id, sesID);
     }
 
     @PostMapping("/new")
@@ -53,7 +53,7 @@ public class RecipeController {
         return ResponseEntity.ok(recipeService.getAllRecipes());
     }
 
-    @GetMapping("orderBy/author")
+    @GetMapping("/author")
     public ResponseEntity<Iterable<Recipe>> getAllRecipesByAuthor(@RequestParam(name = "sesID") String sesID) {
         return ResponseEntity.ok(recipeService.getAllRecipesByAuthor(sesID));
     }

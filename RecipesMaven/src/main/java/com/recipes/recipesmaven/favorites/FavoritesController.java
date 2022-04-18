@@ -18,11 +18,11 @@ public class FavoritesController {
     private final FavoritesService favoritesService;
 
     @PostMapping
-    public void postFavorite(@RequestBody @Valid Favorite favorite) {
-        favoritesService.saveFavorite(favorite);
+    public void postFavorite(@RequestParam Long idRecipe, @RequestParam String sesID) {
+        favoritesService.saveFavorite(idRecipe, sesID);
     }
     @GetMapping
-    public ResponseEntity<Iterator<Recipe>> getAllRecipesByAuthor(@RequestParam(name = "sesID") String sesID) {
+    public ResponseEntity<Iterator<Recipe>> getAllRecipesByAuthor(@RequestParam String sesID) {
         return ResponseEntity.ok(favoritesService.getAllByAuthor(sesID));
     }
 }

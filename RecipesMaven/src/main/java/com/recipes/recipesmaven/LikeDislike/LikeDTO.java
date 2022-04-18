@@ -4,30 +4,28 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Data
 @Entity
 @NoArgsConstructor
-public class LikeDislikeDTO {
+public class LikeDTO {
     @Id
     @JsonIgnore
     @GeneratedValue
-    Long id;
+    private Long id;
+
+    @ElementCollection
+    @Column
+    private List<String> email;
 
     @NotNull
     @Column(nullable = false)
-    Long idRecipe;
+    private Long idRecipe;
 
     @NotNull
     @Column(nullable = false)
-    Long likes;
-
-    @NotNull
-    @Column(nullable = false)
-    Long dislikes;
+    private Long likes;
 }
