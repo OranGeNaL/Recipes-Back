@@ -44,3 +44,26 @@ jobs:
       -
         name: Logout from repo
         run: docker logout
+  deploy:
+      needs: build-n-push
+      runs-on: ubuntu-latest
+      steps:
+        -
+          name: ssh-pipeline
+          uses: cross-the-world/ssh-pipeline@v1.2.0
+          with:
+            # ssh remote host
+            host: ${{ secrets.HOST }}
+            # ssh remote port
+            port: ${{ secrets.PORT }}
+            # ssh remote user
+            user: ${{ secrets.USERNAME }}
+            # content of ssh private key. ex raw content of ~/.ssh/id_rsa
+            key: ${{ secrets.KEY }}
+            script: |
+              cd ${{ secrets.APP_PATH }}
+              docker-compose down
+              docker image rm orangenal/recipes-maven
+              docker system prune --volumes -a --force
+              docker pull orangenal/recipes-maven:latest
+              docker-compose up -d
