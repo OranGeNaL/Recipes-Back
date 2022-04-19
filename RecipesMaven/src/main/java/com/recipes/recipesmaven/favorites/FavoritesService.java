@@ -3,6 +3,7 @@ package com.recipes.recipesmaven.favorites;
 import com.recipes.recipesmaven.recipe.Recipe;
 import com.recipes.recipesmaven.recipe.RecipeNotFoundException;
 import com.recipes.recipesmaven.recipe.RecipeRepository;
+import com.recipes.recipesmaven.users.NoSuchUserException;
 import com.recipes.recipesmaven.users.SessionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,9 @@ public class FavoritesService {
 
     public void saveFavorite(Long idRecipe, String sesID) {
         String email = sessionService.validateUser(sesID);
+        if (email == null) {
+            throw new NoSuchUserException("No such user");
+        }
         if (favoritesRepository.existsByEmail(email)) {
             Favorite favorite = favoritesRepository.findByEmail(email);
             if (favorite.getRecipes().contains(idRecipe)) {
@@ -28,6 +32,7 @@ public class FavoritesService {
             } else {
                 favorite.getRecipes().add(idRecipe);
             }
+            favoritesRepository.save(favorite);
         } else {
             Favorite favorite = new Favorite();
             List<Long> idRecipes = new ArrayList<>();
@@ -39,7 +44,11 @@ public class FavoritesService {
     }
 
     public Iterator<Recipe> getAllByAuthor(String sesID) {
-        Iterable<Long> idRecipes = favoritesRepository.findByEmail(sessionService.validateUser(sesID)).getRecipes();
+        String user = sessionService.validateUser(sesID);
+        if (user == null) {
+            throw new NoSuchUserException("No such user");
+        }
+        Iterable<Long> idRecipes = favoritesRepository.findByEmail(user).getRecipes();
         List<Recipe> recipes = new ArrayList<>();
         for (Long id: idRecipes) {
             recipes.add(recipeRepository.findById(id).orElseThrow(() -> new RecipeNotFoundException("No such recipe")));
