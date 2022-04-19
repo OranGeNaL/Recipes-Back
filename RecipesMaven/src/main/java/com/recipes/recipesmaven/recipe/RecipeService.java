@@ -20,7 +20,7 @@ public class RecipeService {
     }
 
     public Recipe getRecipeById(Long id, String sesID) {
-        Recipe recipe = recipeRepository.findById(id).orElseThrow(RecipeNotFoundException::new);
+        Recipe recipe = recipeRepository.findById(id).orElseThrow(() -> new RecipeNotFoundException("No such recipe"));
         recipe.setViews(recipe.getViews() + 1);
         recipe.setLikes(likeDislikeService.getRecipeLikes(id));
         recipe.setDislikes(likeDislikeService.getRecipeDisLikes(id));
@@ -31,20 +31,20 @@ public class RecipeService {
     }
 
     public List<String> getRecipeByIdMainInformation(Long id) {
-        Recipe recipe = recipeRepository.findById(id).orElseThrow(RecipeNotFoundException::new);
+        Recipe recipe = recipeRepository.findById(id).orElseThrow(() -> new RecipeNotFoundException("No such recipe"));
         return List.of(recipe.getName(), recipe.getMainPicture());
     }
 
     public void deleteRecipeById(Long id) {
         if (!recipeRepository.existsById(id)) {
-            throw new RecipeNotFoundException();
+            throw new RecipeNotFoundException("No such recipe");
         }
         recipeRepository.deleteById(id);
     }
 
     public void updateRecipeById(Long id, Recipe recipe) {
         if (!recipeRepository.existsById(id)) {
-            throw new RecipeNotFoundException();
+            throw new RecipeNotFoundException("No such recipe");
         }
         recipe.setId(id);
         recipeRepository.save(recipe);
