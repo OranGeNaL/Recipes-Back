@@ -1,6 +1,7 @@
 package com.recipes.recipesmaven.LikeDislike;
 
 import com.recipes.recipesmaven.recipe.RecipeNotFoundException;
+import com.recipes.recipesmaven.users.NoSuchUserException;
 import com.recipes.recipesmaven.users.SessionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,10 +16,13 @@ public class LikeDislikeService {
     private final SessionService sessionService;
     private final DislikeRepository dislikeRepository;
 
-    public void likePost(Long idRecipe, String sesID) {
+    public void likePost(Long idRecipe, String sesID, boolean isInner) throws NoSuchUserException {
         String email = getEmail(sesID);
         LikeDTO temp = likeRepository.findByIdRecipe(idRecipe).orElseThrow(RecipeNotFoundException::new);
         List<String> emailList = temp.getEmail();
+        if (email == null) {
+            throw new NoSuchUserException("User not found");
+        }
         if (!temp.getEmail().contains(email)) {
             emailList.add(email);
             temp.setEmail(emailList);
@@ -28,13 +32,19 @@ public class LikeDislikeService {
             temp.setEmail(emailList);
             temp.setLikes(temp.getLikes() - 1);
         }
+        if (isDisliked(idRecipe, sesID) && isInner) {
+            dislikePost(idRecipe, sesID, false);
+        }
         likeRepository.save(temp);
     }
 
-    public void dislikePost(Long idRecipe, String sesID) {
+    public void dislikePost(Long idRecipe, String sesID, boolean isInner) throws NoSuchUserException {
         String email = getEmail(sesID);
         DisLikeDTO temp = dislikeRepository.findByIdRecipe(idRecipe).orElseThrow(RecipeNotFoundException::new);
         List<String> emailList = temp.getEmail();
+        if (email == null) {
+            throw new NoSuchUserException("User not found");
+        }
         if (!temp.getEmail().contains(email)) {
             emailList.add(email);
             temp.setEmail(emailList);
@@ -43,6 +53,9 @@ public class LikeDislikeService {
             emailList.remove(email);
             temp.setEmail(emailList);
             temp.setDislikes(temp.getDislikes() - 1);
+        }
+        if (isLiked(idRecipe, sesID) && isInner) {
+            likePost(idRecipe, sesID, false);
         }
         dislikeRepository.save(temp);
     }
