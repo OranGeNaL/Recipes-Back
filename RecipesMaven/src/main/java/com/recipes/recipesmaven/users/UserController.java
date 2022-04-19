@@ -39,9 +39,4 @@ public class UserController {
             return ResponseEntity.ok(Map.of("sesID",sesID));
         }
     }
-
-    @ExceptionHandler(DuplicateUsernameException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public void duplicateUsernameExceptionHandler() {
-    }
 }

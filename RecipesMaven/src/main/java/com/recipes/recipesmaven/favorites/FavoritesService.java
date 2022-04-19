@@ -42,7 +42,7 @@ public class FavoritesService {
         Iterable<Long> idRecipes = favoritesRepository.findByEmail(sessionService.validateUser(sesID)).getRecipes();
         List<Recipe> recipes = new ArrayList<>();
         for (Long id: idRecipes) {
-            recipes.add(recipeRepository.findById(id).orElseThrow(RecipeNotFoundException::new));
+            recipes.add(recipeRepository.findById(id).orElseThrow(() -> new RecipeNotFoundException("No such recipe")));
         }
         return recipes.iterator();
     }
