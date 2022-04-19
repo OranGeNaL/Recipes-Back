@@ -18,7 +18,7 @@ public class LikeDislikeService {
 
     public void likePost(Long idRecipe, String sesID, boolean isInner) throws NoSuchUserException {
         String email = getEmail(sesID);
-        LikeDTO temp = likeRepository.findByIdRecipe(idRecipe).orElseThrow(RecipeNotFoundException::new);
+        LikeDTO temp = likeRepository.findByIdRecipe(idRecipe).orElseThrow(() -> new RecipeNotFoundException("No such recipe"));
         List<String> emailList = temp.getEmail();
         if (email == null) {
             throw new NoSuchUserException("User not found");
@@ -40,7 +40,7 @@ public class LikeDislikeService {
 
     public void dislikePost(Long idRecipe, String sesID, boolean isInner) throws NoSuchUserException {
         String email = getEmail(sesID);
-        DisLikeDTO temp = dislikeRepository.findByIdRecipe(idRecipe).orElseThrow(RecipeNotFoundException::new);
+        DisLikeDTO temp = dislikeRepository.findByIdRecipe(idRecipe).orElseThrow(() -> new RecipeNotFoundException("No such recipe"));
         List<String> emailList = temp.getEmail();
         if (email == null) {
             throw new NoSuchUserException("User not found");
@@ -73,22 +73,22 @@ public class LikeDislikeService {
 
     public boolean isLiked(Long idRecipe, String sesID) {
         String email = getEmail(sesID);
-        LikeDTO temp = likeRepository.findByIdRecipe(idRecipe).orElseThrow(RecipeNotFoundException::new);
+        LikeDTO temp = likeRepository.findByIdRecipe(idRecipe).orElseThrow(() -> new RecipeNotFoundException("No such recipe"));
         return temp.getEmail().contains(email);
     }
 
     public boolean isDisliked(Long idRecipe, String sesID) {
         String email = getEmail(sesID);
-        DisLikeDTO temp = dislikeRepository.findByIdRecipe(idRecipe).orElseThrow(RecipeNotFoundException::new);
+        DisLikeDTO temp = dislikeRepository.findByIdRecipe(idRecipe).orElseThrow(() -> new RecipeNotFoundException("No such recipe"));
         return temp.getEmail().contains(email);
     }
 
     public Long getRecipeLikes(Long idRecipe) {
-        return likeRepository.findByIdRecipe(idRecipe).orElseThrow(RecipeNotFoundException::new).getLikes();
+        return likeRepository.findByIdRecipe(idRecipe).orElseThrow(() -> new RecipeNotFoundException("No such recipe")).getLikes();
     }
 
     public Long getRecipeDisLikes(Long idRecipe) {
-        return dislikeRepository.findByIdRecipe(idRecipe).orElseThrow(RecipeNotFoundException::new).getDislikes();
+        return dislikeRepository.findByIdRecipe(idRecipe).orElseThrow(() -> new RecipeNotFoundException("No such recipe")).getDislikes();
     }
     private String getEmail(String sesID) {
         return sessionService.validateUser(sesID);

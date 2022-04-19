@@ -24,7 +24,7 @@ public class UserService {
     }
 
     public String login(String email, String password) {
-        User user = userRepository.findById(email).orElseThrow(RecipeNotFoundException::new);
+        User user = userRepository.findById(email).orElseThrow(() -> new RecipeNotFoundException("No such recipe"));
         if (user.getPassword().equals(password)) {
             return sessionService.saveSession(email);
         }
