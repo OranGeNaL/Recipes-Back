@@ -43,6 +43,7 @@ public class RecipeController {
         recipe.setMainPicture(fileName);
         String uploadDir = "recipe-photos/main/" + idRecipe;
         FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
+        recipeService.updateRecipeById(idRecipe,recipe);
     }
 
     @DeleteMapping("/{id}")
