@@ -48,7 +48,11 @@ public class FavoritesService {
         if (user == null) {
             throw new NoSuchUserException("No such user");
         }
-        Iterable<Long> idRecipes = favoritesRepository.findByEmail(user).getRecipes();
+        Favorite email = favoritesRepository.findByEmail(user);
+        if (email == null) {
+            throw new NoSuchUserException("This user doesn't have any favorites");
+        }
+        Iterable<Long> idRecipes = email.getRecipes();
         List<Recipe> recipes = new ArrayList<>();
         for (Long id: idRecipes) {
             recipes.add(recipeRepository.findById(id).orElseThrow(() -> new RecipeNotFoundException("No such recipe")));
