@@ -1,16 +1,20 @@
 package com.recipes.recipesmaven.recipe;
 
+import com.recipes.recipesmaven.FileUploadUtil;
 import com.recipes.recipesmaven.LikeDislike.LikeDislikeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/recipe")
@@ -26,14 +30,19 @@ public class RecipeController {
     }
 
     @PostMapping("/new")
-    public Map<String, Long> postRecipe(@Valid @RequestBody Recipe recipe) throws IOException {
-        //String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
-        //recipe.setMainPicture(fileName);
+    public Map<String, Long> postRecipe(@Valid @RequestBody Recipe recipe) {
         Map<String, Long> id = Map.of("id", recipeService.saveRecipe(recipe));
         likeDislikeService.save(id.get("id"));
-        String uploadDir = "recipe-photos/main/" + id.get("id");
-        //FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
         return id;
+    }
+
+    @PostMapping("/new/mainPhoto")
+    public void postMainPhoto(@RequestParam Long idRecipe,  @RequestParam("mainPhoto") MultipartFile multipartFile) throws IOException {
+        Recipe recipe = recipeService.getRecipeById(idRecipe, "");
+        String fileName = StringUtils.cleanPath(Objects.requireNonNull(multipartFile.getOriginalFilename()));
+        recipe.setMainPicture(fileName);
+        String uploadDir = "recipe-photos/main/" + idRecipe;
+        FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
     }
 
     @DeleteMapping("/{id}")
