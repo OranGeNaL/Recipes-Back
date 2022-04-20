@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -44,6 +45,20 @@ public class RecipeController {
         String uploadDir = "recipe-photos/main/" + idRecipe;
         FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
         recipeService.updateRecipeById(idRecipe,recipe);
+    }
+
+    @PostMapping("/new/stepsPhoto")
+    public void postStepsPhoto(@RequestParam Long idRecipe,  @RequestParam("stepsPhoto") List<MultipartFile> multipartFiles) throws IOException {
+        Recipe recipe = recipeService.getRecipeById(idRecipe, "");
+        List<String> steps = new ArrayList<>();
+        for (MultipartFile multipartFile : multipartFiles) {
+            String fileName = StringUtils.cleanPath(Objects.requireNonNull(multipartFile.getOriginalFilename()));
+            steps.add(fileName);
+            String uploadDir = "recipe-photos/stepsPhoto/" + idRecipe;
+            FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
+        }
+        recipe.setStepsPicture(steps);
+        recipeService.updateRecipeById(idRecipe, recipe);
     }
 
     @DeleteMapping("/{id}")

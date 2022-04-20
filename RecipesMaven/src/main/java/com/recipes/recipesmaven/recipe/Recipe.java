@@ -11,6 +11,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -92,5 +93,15 @@ public class Recipe {
         if (mainPicture == null || id == null) return null;
 
         return "/recipe-photos/main/" + id + "/" + mainPicture;
+    }
+
+    @Transient
+    public List<String> getStepsPhotosImagePath() {
+        if (stepsPicture == null || id == null) return null;
+        List<String> res = new ArrayList<>();
+        for (String steps: stepsPicture) {
+            res.add("/recipe-photos/stepsPhoto/" + id + "/" + steps);
+        }
+        return res;
     }
 }
