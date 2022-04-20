@@ -64,8 +64,8 @@ public class RecipeController {
     }
 
     @GetMapping("/author")
-    public ResponseEntity<Iterable<Recipe>> getAllRecipesByAuthor(@RequestParam(name = "sesID") String sesID) {
-        return ResponseEntity.ok(recipeService.getAllRecipesByAuthor(sesID));
+    public ResponseEntity<Iterable<Recipe>> getAllRecipesByAuthor(@RequestParam String email) {
+        return ResponseEntity.ok(recipeService.getAllRecipesByAuthor(email));
     }
 
     @GetMapping("/orderBy/date")
