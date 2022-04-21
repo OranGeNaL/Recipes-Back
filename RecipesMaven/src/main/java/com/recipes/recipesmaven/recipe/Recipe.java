@@ -88,6 +88,9 @@ public class Recipe {
 
     @Column
     private boolean isDislike;
+
+    @Column
+    private boolean isFavorite;
     @Transient
     public String getMainPhotosImagePath() {
         if (mainPicture == null || id == null) return null;
