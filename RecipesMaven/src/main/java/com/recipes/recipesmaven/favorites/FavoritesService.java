@@ -1,5 +1,6 @@
 package com.recipes.recipesmaven.favorites;
 
+import com.recipes.recipesmaven.LikeDislike.LikeDTO;
 import com.recipes.recipesmaven.recipe.Recipe;
 import com.recipes.recipesmaven.recipe.RecipeNotFoundException;
 import com.recipes.recipesmaven.recipe.RecipeRepository;
@@ -41,6 +42,18 @@ public class FavoritesService {
             favorite.setRecipes(idRecipes);
             favoritesRepository.save(favorite);
         }
+    }
+
+    public boolean isFavorite(Long idRecipe, String sesID) {
+        String email = sessionService.validateUser(sesID);
+        if (email == null) {
+            return false;
+        }
+        Favorite favorite = favoritesRepository.findByEmail(email);
+        if (favorite == null) {
+            return false;
+        }
+        return favorite.getRecipes().contains(idRecipe);
     }
 
     public Iterator<Recipe> getAllByAuthor(String sesID) {

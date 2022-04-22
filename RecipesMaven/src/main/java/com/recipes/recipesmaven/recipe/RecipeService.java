@@ -1,6 +1,7 @@
 package com.recipes.recipesmaven.recipe;
 
 import com.recipes.recipesmaven.LikeDislike.LikeDislikeService;
+import com.recipes.recipesmaven.favorites.FavoritesService;
 import com.recipes.recipesmaven.users.SessionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,7 @@ public class RecipeService {
     private final RecipeRepository recipeRepository;
     private final SessionService sessionService;
     private final LikeDislikeService likeDislikeService;
+    private final FavoritesService favoritesService;
 
     public Long saveRecipe(Recipe recipe) {
         recipe.setAuthor(sessionService.validateUser(recipe.getAuthor()));
@@ -26,6 +28,7 @@ public class RecipeService {
         recipe.setDislikes(likeDislikeService.getRecipeDisLikes(id));
         recipe.setLike(likeDislikeService.isLiked(id, sesID));
         recipe.setDislike(likeDislikeService.isDisliked(id, sesID));
+        recipe.setFavorite(favoritesService.isFavorite(id, sesID));
         recipeRepository.save(recipe);
         return recipe;
     }
@@ -51,7 +54,14 @@ public class RecipeService {
     }
 
     public Iterable<Recipe> getAllRecipes() {
-        return recipeRepository.findAll();
+        Iterable<Recipe> recipes = recipeRepository.findAll();
+        for (Recipe recipe: recipes) {
+            recipe.setLikes(likeDislikeService.getRecipeLikes(recipe.getId()));
+            recipe.setDislikes(likeDislikeService.getRecipeDisLikes(recipe.getId()));
+            recipeRepository.save(recipe);
+        }
+        return recipes;
+
     }
 
     public Iterable<Recipe> getAllRecipesOrderByDate() {
