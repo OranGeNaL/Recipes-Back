@@ -85,6 +85,6 @@ public class RecipeService {
     }
 
     public Iterable<Recipe> getAllRecipesByLikes() {
-        return recipeRepository.findAllByOrderByLikesAsc();
+        return recipeRepository.findAllByOrderByLikesDesc();
     }
 }
